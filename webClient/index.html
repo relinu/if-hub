@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Infinite Fusion Hub</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+
+        const socket = io();
+
+        socket.on("connect", (offer) => {
+            console.log("connected");
+        });
+
+        socket.on("newOffer", (offer) => {
+            console.log("new offer: " + offer);
+
+            var rnd = Math.floor(Math.random() * window.innerWidth);
+            const container = document.getElementById("offers");
+            const img = document.createElement("img");
+
+            img.classList.add("offer");
+            img.style.setProperty('--left-spacing', rnd + 'px');
+            img.src = `https://if.daena.me/sprites/${offer}.png`;
+            container.appendChild(img);
+
+            setTimeout(() => {
+                container.removeChild(img);
+            }, 6000);
+        });
+    </script>
+</head>
+
+<body>
+    <div class="effect"></div>
+    <img class="background" src="imgs/background.png">
+    <div id="offers"></div>
+    <div class="foreground"></div>
+</body>
+
+</html>
