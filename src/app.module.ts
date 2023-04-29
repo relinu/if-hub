@@ -5,6 +5,8 @@ import { WondertradeModule } from './wondertrade/wondertrade.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { APP_GUARD } from '@nestjs/core';
+import { NetworkingModule } from './networking/networking.module';
+import { AuthModule } from './auth/auth.module';
 
 const certPath = '.\\X509-cert-1606584436327368388.pem';
 
@@ -19,7 +21,9 @@ const certPath = '.\\X509-cert-1606584436327368388.pem';
       { sslKey: certPath, sslCert: certPath },
     ),
     ServeStaticModule.forRoot({ rootPath: join(__dirname, '..', 'webClient') }),
+    NetworkingModule,
     WondertradeModule,
+    AuthModule,
   ],
   providers: [
     {
@@ -28,4 +32,4 @@ const certPath = '.\\X509-cert-1606584436327368388.pem';
     },
   ],
 })
-export class AppModule {}
+export class AppModule { }
