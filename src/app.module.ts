@@ -7,18 +7,18 @@ import { join } from 'path';
 import { APP_GUARD } from '@nestjs/core';
 import { NetworkingModule } from './networking/networking.module';
 import { AuthModule } from './auth/auth.module';
-
-const certPath = '.\\X509-cert-1606584436327368388.pem';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     ThrottlerModule.forRoot({
       ttl: 60,
       limit: 15,
     }),
     MongooseModule.forRoot(
-      'mongodb+srv://cluster0.kwmnejd.mongodb.net/?authSource=%24external&authMechanism=MONGODB-X509&retryWrites=true&w=majority',
-      { sslKey: certPath, sslCert: certPath },
+      process.env.DB_URL,
+      { sslKey: process.env.DB_CERT, sslCert: process.env.DB_CERT },
     ),
     ServeStaticModule.forRoot({ rootPath: join(__dirname, '..', 'webClient') }),
     NetworkingModule,
