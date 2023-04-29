@@ -4,6 +4,7 @@
 
 # custom
 *.pem
+.env
 
 # Logs
 logs
