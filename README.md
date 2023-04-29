@@ -1,6 +1,6 @@
 ## Description
 
-Server implementation for handeling the online wondertrade feature of [infinite fusion](https://github.com/infinitefusion/infinitefusion-e18), as well as additional features implemented by me like: 
+Server implementation for handeling the online wondertrade feature of [infinite fusion](https://github.com/infinitefusion/infinitefusion-e18), as well as additional unofficial features (currently in a private repo) implemented by me like: 
 - direct trade (WIP)
 - online battles (WIP)
 
