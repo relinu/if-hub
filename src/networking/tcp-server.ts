@@ -37,7 +37,6 @@ export class TcpServer implements OnApplicationBootstrap, BeforeApplicationShutd
     private clientConnected(socket: Socket) {
         socket.setTimeout(NET_SOCKET_TIMEOUT_DEFAULT);
         const client = this.clientCollection.addClient(socket);
-        this.logger.log(`New client connected with id: ${client.id}`);
 
         // on data
         socket.on('data', (data) => this.handleConnectionData(client, data));
@@ -47,9 +46,6 @@ export class TcpServer implements OnApplicationBootstrap, BeforeApplicationShutd
         socket.on('error', () => client.disconnect());
         socket.on('close', () => client.disconnect());
         socket.on('timeout', () => client.disconnect());
-
-        // push client
-        socket.pipe(socket);
     }
 
     private handleConnectionData(client: Client, data: Buffer) {
@@ -60,7 +56,7 @@ export class TcpServer implements OnApplicationBootstrap, BeforeApplicationShutd
             if (handler && handler.check(client, packet)) {
                 handler.handle(client, packet);
             } else {
-                this.logger.debug(`Handler check failed for packet of Client(${client.id})`)
+                this.logger.debug(`Handler check failed for packet(${packet.type}) of Client(${client.id})`)
             }
         } else {
             this.logger.debug(`Could not parse packet of Client(${client.id})`)

@@ -21,10 +21,10 @@ export class ModeSelectHandler extends BaseHandler {
     public handle(client: Client, packet: Packet): boolean {
         const mode: number = packet.getParameter(0, ParamTypes.number);
         switch (mode) {
-            case 1:
+            case 0:
                 this.logger.debug(`Client(${client.id}) switched mode to: directtrade`);
                 break;
-            case 2:
+            case 1:
                 this.logger.debug(`Client(${client.id}) switched mode to: battle`);
                 break;
             default:

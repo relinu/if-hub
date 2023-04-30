@@ -29,6 +29,8 @@ export class AuthHandler extends BaseHandler {
             client.setData(AUTH_DATA_KEY, true);
             const mode = this.handlerRegistry.addHandler(client, ModeSelectHandler);
             client.sendPacket(new Packet(mode.type))
+        } else {
+            client.disconnect();
         }
 
         return true;

@@ -1,3 +1,4 @@
+import { Logger } from '@nestjs/common';
 import { Socket } from 'net';
 import { AUTH_DATA_KEY } from '../+handlers/auth.handler';
 import { BaseHandler } from '../+handlers/base.handler';
@@ -7,6 +8,8 @@ import { Packet } from './packet';
 const CLIENT_AUTH_TIMEOUT_DEFAULT = 2 * 1000;
 
 export class Client {
+    private readonly logger = new Logger(Client.name);
+
     readonly id: string;
     private socket: Socket;
     readonly handlers: Map<string, BaseHandler>;
@@ -21,10 +24,13 @@ export class Client {
 
         this.handlers = new Map<string, BaseHandler>();
         this.timeout = setTimeout(() => this.disconnect(), CLIENT_AUTH_TIMEOUT_DEFAULT);
+
+        this.logger.log(`New client connected with id: ${this.id}`);
     }
 
     public disconnect() {
         if (this.socket && !this.socket.destroyed) {
+            this.logger.log(`Client(${this.id}) disconnected`);
             this.socket.destroy();
             this.cc.removeClient(this.id);
         }
