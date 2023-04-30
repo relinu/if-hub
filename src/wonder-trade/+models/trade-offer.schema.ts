@@ -47,6 +47,4 @@ TradeOfferSchema.index(
   { personal_id: 1, 'trainer_info.trainer_id': 1 },
   { unique: true },
 );
-TradeOfferSchema.index(
-  { level: 1, },
-);
+TradeOfferSchema.index({ level: 1 });

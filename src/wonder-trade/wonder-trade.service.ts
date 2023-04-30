@@ -27,16 +27,22 @@ export class WonderTradeService {
     }
 
     const receivingOffer = await this.toModel
-      .findOne<TradeOffer>({
-        $and: [
-          {
-            'trainer_info.trainer_id': { $ne: myOffer.trainer_info.trainer_id },
-          },
-          {
-            'level': { $lte: myOffer.level + 5 },
-          },
-        ],
-      }, {}, { sort: { 'createdAt': 1 } })
+      .findOne<TradeOffer>(
+        {
+          $and: [
+            {
+              'trainer_info.trainer_id': {
+                $ne: myOffer.trainer_info.trainer_id,
+              },
+            },
+            {
+              level: { $lte: myOffer.level + 5 },
+            },
+          ],
+        },
+        {},
+        { sort: { createdAt: 1 } },
+      )
       .exec();
 
     if (!receivingOffer) {

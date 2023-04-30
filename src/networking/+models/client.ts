@@ -16,7 +16,11 @@ export class Client {
   private data: Map<string, any>;
   private timeout: NodeJS.Timeout;
 
-  constructor(id: string, socket: Socket, private cc: ClientCollection) {
+  constructor(
+    id: string,
+    socket: Socket,
+    private clientCollection: ClientCollection,
+  ) {
     this.id = id;
     this.socket = socket;
     this.data = new Map<string, any>();
@@ -36,7 +40,7 @@ export class Client {
       this.logger.log(`Client(${this.id}) disconnected`);
       const error = msg ? { name: 'error', message: msg } : undefined;
       this.socket.destroy(error);
-      this.cc.removeClient(this.id);
+      this.clientCollection.removeClient(this.id);
     }
 
     this.clearTimeout();

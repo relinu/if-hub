@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Socket } from 'net';
 import { v4 as uuidV4 } from 'uuid';
 import { AuthHandler } from './+handlers/auth.handler';
+import { PingHandler } from './+handlers/ping.handler';
 import { Client } from './+models/client';
 import { HandlerRegistry } from './handler-registry';
 
@@ -16,6 +17,7 @@ export class ClientCollection {
   public addClient(socket: Socket): Client {
     const clientId = uuidV4();
     const newClient = new Client(clientId, socket, this);
+    this.handlerRegistry.addHandler(newClient, PingHandler);
     this.handlerRegistry.addHandler(newClient, AuthHandler);
 
     this.clients.set(newClient.id, newClient);

@@ -11,15 +11,16 @@ export const AUTH_DATA_KEY = 'auth_key';
 @Injectable()
 export class AuthHandler extends BaseHandler {
   private readonly logger = new Logger(AuthHandler.name);
-  public get type(): string {
-    return 'AUTH';
-  }
 
   constructor(
     private auth: AuthService,
     private handlerRegistry: HandlerRegistry,
   ) {
     super();
+  }
+
+  public get type(): string {
+    return 'AUTH';
   }
 
   public check(client: Client, packet: Packet): boolean {

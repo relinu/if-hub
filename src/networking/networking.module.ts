@@ -15,7 +15,7 @@ import { TcpServer } from './tcp-server';
     AuthHandler,
     ModeSelectHandler,
   ],
-  exports: [HandlerRegistry],
+  exports: [HandlerRegistry, ClientCollection],
   imports: [AuthModule, forwardRef(() => DirectTradeModule)],
 })
 export class NetworkingModule {}
