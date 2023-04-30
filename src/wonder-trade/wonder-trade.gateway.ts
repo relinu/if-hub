@@ -3,11 +3,10 @@ import { Server } from 'socket.io';
 import { TradeOffer } from './+models/trade-offer.schema';
 
 @WebSocketGateway()
-export class WondertradeGateway {
+export class WonderTradeGateway {
   @WebSocketServer() server: Server;
 
   sendNewOffer(offer: TradeOffer) {
-    console.log('send offer: ' + offer.personal_id);
     this.server.emit('newOffer', offer.pokemon_species);
   }
 }

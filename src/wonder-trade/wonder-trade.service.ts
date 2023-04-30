@@ -2,13 +2,13 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { TradeOffer } from './+models/trade-offer.schema';
-import { WondertradeGateway } from './wondertrade.gateway';
+import { WonderTradeGateway } from './wonder-trade.gateway';
 
 @Injectable()
-export class WondertradeService {
+export class WonderTradeService {
   constructor(
     @InjectModel(TradeOffer.name) private toModel: Model<TradeOffer>,
-    private wtGateway: WondertradeGateway,
+    private wtGateway: WonderTradeGateway,
   ) {}
 
   async trade(myOffer: TradeOffer): Promise<TradeOffer> {

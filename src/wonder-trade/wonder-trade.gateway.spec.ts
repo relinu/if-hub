@@ -1,15 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { WondertradeGateway } from './wondertrade.gateway';
+import { WonderTradeGateway } from './wonder-trade.gateway';
 
-describe('WondertradeGateway', () => {
-  let gateway: WondertradeGateway;
+describe('WonderTradeGateway', () => {
+  let gateway: WonderTradeGateway;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [WondertradeGateway],
+      providers: [WonderTradeGateway],
     }).compile();
 
-    gateway = module.get<WondertradeGateway>(WondertradeGateway);
+    gateway = module.get<WonderTradeGateway>(WonderTradeGateway);
   });
 
   it('should be defined', () => {

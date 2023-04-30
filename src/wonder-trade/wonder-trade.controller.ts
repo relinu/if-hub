@@ -1,10 +1,10 @@
 import { Body, Controller, HttpCode, Post } from '@nestjs/common';
 import { TradeOffer } from './+models/trade-offer.schema';
-import { WondertradeService } from './wondertrade.service';
+import { WonderTradeService } from './wonder-trade.service';
 
 @Controller('wondertrade')
-export class WondertradeController {
-  constructor(private wtService: WondertradeService) {}
+export class WonderTradeController {
+  constructor(private wtService: WonderTradeService) {}
 
   @Post()
   @HttpCode(200)

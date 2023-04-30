@@ -7,32 +7,31 @@ import { HandlerRegistry } from './handler-registry';
 
 @Injectable()
 export class ClientCollection {
+  private clients: Map<string, Client>;
 
-    private clients: Map<string, Client>;
+  constructor(private handlerRegistry: HandlerRegistry) {
+    this.clients = new Map<string, Client>();
+  }
 
-    constructor(private handlerRegistry: HandlerRegistry) {
-        this.clients = new Map<string, Client>();
+  public addClient(socket: Socket): Client {
+    const clientId = uuidV4();
+    const newClient = new Client(clientId, socket, this);
+    this.handlerRegistry.addHandler(newClient, AuthHandler);
+
+    this.clients.set(newClient.id, newClient);
+    return newClient;
+  }
+
+  public getClient(id: string): Client {
+    return this.clients.get(id);
+  }
+
+  public removeClient(id: string): boolean {
+    const client = this.clients.get(id);
+    if (client) {
+      client.disconnect();
     }
 
-    public addClient(socket: Socket): Client {
-        const clientId = uuidV4();
-        const newClient = new Client(clientId, socket, this);
-        this.handlerRegistry.addHandler(newClient, AuthHandler);
-
-        this.clients.set(newClient.id, newClient);
-        return newClient;
-    }
-
-    public getClient(id: string): Client {
-        return this.clients.get(id);
-    }
-
-    public removeClient(id: string): boolean {
-        const client = this.clients.get(id);
-        if (client) {
-            client.disconnect();
-        }
-
-        return this.clients.delete(id);
-    }
+    return this.clients.delete(id);
+  }
 }
