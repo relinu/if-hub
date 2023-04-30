@@ -33,10 +33,10 @@ export class WonderTradeService {
             'trainer_info.trainer_id': { $ne: myOffer.trainer_info.trainer_id },
           },
           {
-            'trainer_info.nb_badges': { $lte: myOffer.trainer_info.nb_badges },
+            'level': { $lte: myOffer.level + 5 },
           },
         ],
-      })
+      }, {}, { sort: { 'createdAt': 1 } })
       .exec();
 
     if (!receivingOffer) {

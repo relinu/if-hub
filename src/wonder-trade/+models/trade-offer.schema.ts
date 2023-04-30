@@ -3,7 +3,7 @@ import { Schema as MongooseSchema } from 'mongoose';
 import { ShinyInfo, ShinyInfoSchema } from './shiny-info.schema';
 import { TrainerInfo, TrainerInfoSchema } from './trainer-info.schema';
 
-@Schema()
+@Schema({ timestamps: true })
 export class TradeOffer {
   @Prop({ required: true })
   personal_id: string;
@@ -46,4 +46,7 @@ export const TradeOfferSchema = SchemaFactory.createForClass(TradeOffer);
 TradeOfferSchema.index(
   { personal_id: 1, 'trainer_info.trainer_id': 1 },
   { unique: true },
+);
+TradeOfferSchema.index(
+  { level: 1, },
 );
