@@ -1,11 +1,12 @@
 import { Logger } from '@nestjs/common';
 import { Socket } from 'net';
-import { AUTH_DATA_KEY } from '../+handlers/auth.handler';
+import { EventEmitter } from 'stream';
+import { DATA_KEY_AUTH } from '../+handlers/auth.handler';
 import { BaseHandler } from '../+handlers/base.handler';
-import { ClientCollection } from '../client-collection';
 import { Packet } from './packet';
 
-const CLIENT_AUTH_TIMEOUT_DEFAULT = 2 * 1000;
+const NET_AUTH_TIMEOUT_DEFAULT = 2 * 1000;
+export const DATA_KEY_NAME = 'name_key';
 
 export class Client {
   private readonly logger = new Logger(Client.name);
@@ -15,21 +16,18 @@ export class Client {
   readonly handlers: Map<string, BaseHandler>;
   private data: Map<string, any>;
   private timeout: NodeJS.Timeout;
+  private event: EventEmitter;
 
-  constructor(
-    id: string,
-    socket: Socket,
-    private clientCollection: ClientCollection,   // TODO: replace with disconnect handler?
-  ) {
+  constructor(id: string, socket: Socket) {
     this.id = id;
     this.socket = socket;
     this.data = new Map<string, any>();
-    this.setData(AUTH_DATA_KEY, false);
+    this.setData(DATA_KEY_AUTH, false);
 
     this.handlers = new Map<string, BaseHandler>();
     this.timeout = setTimeout(
       () => this.disconnect(),
-      CLIENT_AUTH_TIMEOUT_DEFAULT,
+      NET_AUTH_TIMEOUT_DEFAULT,
     );
 
     this.logger.log(`New client connected with id: ${this.id}`);
@@ -40,9 +38,10 @@ export class Client {
       this.logger.log(`Client(${this.id}) disconnected`);
       const error = msg ? { name: 'error', message: msg } : undefined;
       this.socket.destroy(error);
-      this.clientCollection.removeClient(this.id);
+      this.event.emit('disconnect', this.id);
     }
 
+    this.event.removeAllListeners();
     this.clearTimeout();
   }
 
@@ -59,7 +58,9 @@ export class Client {
   }
 
   public sendPacket(packet: Packet) {
-    this.socket.write(packet.toString());
+    if (this.socket.writable) {
+      this.socket.write(packet.toString());
+    }
   }
 
   public addHandler(handler: BaseHandler) {
@@ -68,6 +69,10 @@ export class Client {
 
   public removeHandler(handler: BaseHandler) {
     this.handlers.delete(handler.type);
+  }
+
+  public onDisconnect(handler: (id: string) => void) {
+    this.event.on('disconnect', handler);
   }
 
   public clearTimeout() {

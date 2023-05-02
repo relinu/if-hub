@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Socket } from 'net';
 import { v4 as uuidV4 } from 'uuid';
 import { AuthHandler } from './+handlers/auth.handler';
@@ -8,6 +8,7 @@ import { HandlerRegistry } from './handler-registry';
 
 @Injectable()
 export class ClientCollection {
+  private readonly logger = new Logger(ClientCollection.name);
   private clients: Map<string, Client>;
 
   constructor(private handlerRegistry: HandlerRegistry) {
@@ -16,7 +17,9 @@ export class ClientCollection {
 
   public addClient(socket: Socket): Client {
     const clientId = uuidV4();
-    const newClient = new Client(clientId, socket, this);
+    const newClient = new Client(clientId, socket);
+    newClient.onDisconnect(() => this.removeClient(newClient.id));
+
     this.handlerRegistry.addHandler(newClient, PingHandler);
     this.handlerRegistry.addHandler(newClient, AuthHandler);
 
@@ -28,12 +31,8 @@ export class ClientCollection {
     return this.clients.get(id);
   }
 
-  public removeClient(id: string): boolean {
-    const client = this.clients.get(id);
-    if (client) {
-      client.disconnect();
-    }
-
+  private removeClient(id: string): boolean {
+    this.logger.debug(`Client(${id}) removed from client collection`);
     return this.clients.delete(id);
   }
 }
