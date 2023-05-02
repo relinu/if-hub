@@ -21,7 +21,9 @@ import { DirectTradeModule } from './direct-trade/direct-trade.module';
       sslKey: process.env.DB_CERT,
       sslCert: process.env.DB_CERT,
     }),
-    ServeStaticModule.forRoot({ rootPath: join(__dirname, '..', 'webClient') }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'web-client'),
+    }),
     AuthModule,
     NetworkingModule,
     WonderTradeModule,
