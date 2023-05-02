@@ -1,19 +1,19 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { TradeOffer } from './+models/trade-offer.schema';
+import { Pokemon } from '../+models/pokemon.schema';
 import { WonderTradeGateway } from './wonder-trade.gateway';
 
 @Injectable()
 export class WonderTradeService {
   constructor(
-    @InjectModel(TradeOffer.name) private toModel: Model<TradeOffer>,
+    @InjectModel(Pokemon.name) private toModel: Model<Pokemon>,
     private wtGateway: WonderTradeGateway,
   ) {}
 
-  async trade(myOffer: TradeOffer): Promise<TradeOffer> {
+  async trade(myOffer: Pokemon): Promise<Pokemon> {
     const alreadyAdded = await this.toModel
-      .findOne<TradeOffer>({
+      .findOne<Pokemon>({
         $and: [
           { personal_id: myOffer.personal_id },
           { 'trainer_info.trainer_id': myOffer.trainer_info.trainer_id },
@@ -27,7 +27,7 @@ export class WonderTradeService {
     }
 
     const receivingOffer = await this.toModel
-      .findOne<TradeOffer>(
+      .findOne<Pokemon>(
         {
           $and: [
             {
