@@ -1,8 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { GameMode } from 'src/+models/gamemodes';
+import { GameMode } from 'src/+utils/gamemodes';
 import { DirectTradeService } from 'src/direct-trade/direct-trade.service';
-import { Client } from '../+models/client';
-import { Packet, ParamTypes } from '../+models/packet';
+import { Client } from '../+utils/client';
+import { Packet, ParamTypes } from '../+utils/packet';
 import { HandlerRegistry } from '../handler-registry';
 import { BaseHandler } from './base.handler';
 

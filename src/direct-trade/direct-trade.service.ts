@@ -1,11 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { PlayerQueue, QUEUE_PACKET_TYPE } from 'src/+models/player-queue';
-import { Client } from 'src/networking/+models/client';
-import { Packet } from 'src/networking/+models/packet';
+import { PlayerQueue, QUEUE_PACKET_TYPE } from 'src/+utils/player-queue';
+import { Client } from 'src/networking/+utils/client';
+import { Packet } from 'src/networking/+utils/packet';
 import { ClientCollection } from 'src/networking/client-collection';
 import { HandlerRegistry } from 'src/networking/handler-registry';
 import { DTRoomHandler } from './+handlers/dtroom.handler';
-import { Trade, TRADE_DATA_KEY } from './+models/trade';
+import { TradeAcceptHandler } from './+handlers/trade-accept.handler';
+import { TradePokemonHandler } from './+handlers/trade-pokemon.handler';
+import { Trade, TRADE_DATA_KEY, TRADE_START_PACKET, TRADE_STOP_PACKET } from './+utils/trade';
 
 @Injectable()
 export class DirectTradeService {
@@ -42,8 +44,18 @@ export class DirectTradeService {
   }
 
   public stopTrade(tradeId: string) {
+    const trade = this.getTrade(tradeId);
+
+    for (const player of trade.players) {
+      player.setData(TRADE_DATA_KEY, undefined);
+
+      this.handlerRegistry.removeHandler(player, TradePokemonHandler);
+      this.handlerRegistry.removeHandler(player, TradeAcceptHandler);
+
+      player.sendPacket(new Packet(TRADE_STOP_PACKET));
+    }
+
     this.trades.delete(tradeId);
-    // TODO: remove handlers, send stop packets
   }
 
   private createTrade(players: Client[]) {
@@ -52,7 +64,11 @@ export class DirectTradeService {
 
     for (const player of players) {
       player.setData(TRADE_DATA_KEY, trade.id);
-      // TODO: add handlers, send start packets
+
+      this.handlerRegistry.addHandler(player, TradePokemonHandler);
+      this.handlerRegistry.addHandler(player, TradeAcceptHandler);
+
+      player.sendPacket(new Packet(TRADE_START_PACKET));
     }
   }
 }

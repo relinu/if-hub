@@ -1,7 +1,7 @@
 import { Injectable, Type } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import { BaseHandler } from './+handlers/base.handler';
-import { Client } from './+models/client';
+import { Client } from './+utils/client';
 
 @Injectable()
 export class HandlerRegistry {

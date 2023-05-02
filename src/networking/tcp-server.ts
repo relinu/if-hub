@@ -5,8 +5,8 @@ import {
   OnApplicationBootstrap,
 } from '@nestjs/common';
 import { createServer, Server as TCPServer, Socket } from 'net';
-import { Client } from './+models/client';
-import { Packet } from './+models/packet';
+import { Client } from './+utils/client';
+import { Packet } from './+utils/packet';
 import { ClientCollection } from './client-collection';
 
 const NET_SERVER_PORT_DEFAULT = 8478;
@@ -14,8 +14,7 @@ const NET_SOCKET_TIMEOUT_DEFAULT = 60 * 1000;
 
 @Injectable()
 export class TcpServer
-  implements OnApplicationBootstrap, BeforeApplicationShutdown
-{
+  implements OnApplicationBootstrap, BeforeApplicationShutdown {
   private readonly logger = new Logger(TcpServer.name);
   private server: TCPServer;
 

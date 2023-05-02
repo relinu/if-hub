@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { AuthService } from 'src/auth/auth.service';
-import { Client } from '../+models/client';
-import { Packet, ParamTypes } from '../+models/packet';
+import { Client } from '../+utils/client';
+import { Packet, ParamTypes } from '../+utils/packet';
 import { HandlerRegistry } from '../handler-registry';
 import { BaseHandler } from './base.handler';
 import { ModeSelectHandler } from './mode-select.handler';

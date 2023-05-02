@@ -3,7 +3,7 @@ import { Socket } from 'net';
 import { v4 as uuidV4 } from 'uuid';
 import { AuthHandler } from './+handlers/auth.handler';
 import { PingHandler } from './+handlers/ping.handler';
-import { Client } from './+models/client';
+import { Client } from './+utils/client';
 import { HandlerRegistry } from './handler-registry';
 
 @Injectable()

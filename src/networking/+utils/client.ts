@@ -19,7 +19,7 @@ export class Client {
   constructor(
     id: string,
     socket: Socket,
-    private clientCollection: ClientCollection,
+    private clientCollection: ClientCollection,   // TODO: replace with disconnect handler?
   ) {
     this.id = id;
     this.socket = socket;

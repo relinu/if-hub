@@ -1,9 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { QUEUE_DATA_KEY } from 'src/+models/player-queue';
+import { QUEUE_DATA_KEY } from 'src/+utils/player-queue';
 import { DirectTradeService } from 'src/direct-trade/direct-trade.service';
 import { BaseHandler } from 'src/networking/+handlers/base.handler';
-import { Client } from 'src/networking/+models/client';
-import { Packet, ParamTypes } from 'src/networking/+models/packet';
+import { Client } from 'src/networking/+utils/client';
+import { Packet, ParamTypes } from 'src/networking/+utils/packet';
 import { HandlerRegistry } from 'src/networking/handler-registry';
 
 @Injectable()

@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { BaseHandler } from 'src/networking/+handlers/base.handler';
-import { Client } from 'src/networking/+models/client';
-import { Packet } from 'src/networking/+models/packet';
+import { Client } from 'src/networking/+utils/client';
+import { Packet } from 'src/networking/+utils/packet';
 
 @Injectable()
 export class PingHandler extends BaseHandler {
