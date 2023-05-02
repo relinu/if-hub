@@ -1,9 +1,9 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AuthModule } from 'src/auth/auth.module';
-import { DirectTradeModule } from 'src/direct-trade/direct-trade.module';
 import { AuthHandler } from './+handlers/auth.handler';
-import { ModeSelectHandler } from './+handlers/mode-select.handler';
+import { GameModeSelectHandler } from './+handlers/game-mode-select.handler';
 import { ClientCollection } from './client-collection';
+import { GameModeRegistry } from './game-mode-registry';
 import { HandlerRegistry } from './handler-registry';
 import { TcpServer } from './tcp-server';
 
@@ -12,10 +12,11 @@ import { TcpServer } from './tcp-server';
     TcpServer,
     ClientCollection,
     HandlerRegistry,
+    GameModeRegistry,
     AuthHandler,
-    ModeSelectHandler,
+    GameModeSelectHandler,
   ],
-  exports: [HandlerRegistry, ClientCollection],
-  imports: [AuthModule, forwardRef(() => DirectTradeModule)],
+  exports: [ClientCollection, HandlerRegistry, GameModeRegistry],
+  imports: [AuthModule],
 })
 export class NetworkingModule {}

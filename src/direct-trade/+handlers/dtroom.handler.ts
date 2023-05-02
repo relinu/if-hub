@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { QUEUE_DATA_KEY } from 'src/+utils/player-queue';
+import { DATA_KEY_QUEUE } from 'src/+utils/player-queue';
 import { DirectTradeService } from 'src/direct-trade/direct-trade.service';
 import { BaseHandler } from 'src/networking/+handlers/base.handler';
 import { Client } from 'src/networking/+utils/client';
@@ -22,12 +22,12 @@ export class DTRoomHandler extends BaseHandler {
   }
 
   public check(client: Client, packet: Packet): boolean {
-    return !client.getData<number>(QUEUE_DATA_KEY) && packet.length > 0;
+    return !client.getData<number>(DATA_KEY_QUEUE) && packet.length > 0;
   }
 
   public handle(client: Client, packet: Packet): boolean {
     const code: number = packet.getParameter(0, ParamTypes.number);
-    client.setData(QUEUE_DATA_KEY, code);
+    client.setData(DATA_KEY_QUEUE, code);
     this.handlerRegistry.removeHandler(client, DTRoomHandler);
 
     this.dtService.startTrade(client, code);

@@ -1,5 +1,5 @@
-export const QUEUE_DATA_KEY = 'queue_key';
-export const QUEUE_PACKET_TYPE = 'QUEUE';
+export const DATA_KEY_QUEUE = 'queue_key';
+export const PACKET_QUEUE = 'QUEUE';
 
 export class PlayerQueue<T extends number | string> {
   private queues: Map<T, string[]>;

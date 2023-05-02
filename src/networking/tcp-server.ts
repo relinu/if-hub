@@ -14,7 +14,8 @@ const NET_SOCKET_TIMEOUT_DEFAULT = 60 * 1000;
 
 @Injectable()
 export class TcpServer
-  implements OnApplicationBootstrap, BeforeApplicationShutdown {
+  implements OnApplicationBootstrap, BeforeApplicationShutdown
+{
   private readonly logger = new Logger(TcpServer.name);
   private server: TCPServer;
 
