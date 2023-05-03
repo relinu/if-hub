@@ -77,7 +77,7 @@ export class Client {
     this.handlers.delete(handler.type);
   }
 
-  public onDisconnect(handler: (id: string) => void, remove: boolean = false) {
+  public onDisconnect(handler: (id: string) => void, remove = false) {
     if (remove) {
       this.event.removeListener(EVENT_DISCONNECT, handler);
     } else {

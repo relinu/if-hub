@@ -34,7 +34,9 @@ export class GameModeSelectHandler extends BaseHandler {
       this.logger.debug(`Client(${client.id}) switched to gamemode: ${mode}`);
       selector.initialize(client);
     } else {
-      this.logger.debug(`Client(${client.id}) switched to not implemented gamemode: ${mode}`);
+      this.logger.debug(
+        `Client(${client.id}) switched to not implemented gamemode: ${mode}`,
+      );
       client.disconnect('not_implemented');
     }
 

@@ -19,6 +19,6 @@ import { DirectTradeService } from './direct-trade.service';
     },
   ],
   imports: [NetworkingModule],
-  exports: [DirectTradeService]
+  exports: [DirectTradeService],
 })
 export class DirectTradeModule {}

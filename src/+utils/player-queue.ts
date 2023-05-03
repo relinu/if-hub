@@ -1,4 +1,4 @@
-import { Client } from "src/networking/+utils/client";
+import { Client } from 'src/networking/+utils/client';
 
 export const DATA_KEY_QUEUE = 'queue_key';
 export const PACKET_QUEUE = 'QUEUE';
@@ -25,7 +25,7 @@ export class PlayerQueue<T extends number | string> {
 
   find(queueId: T, count = 1): string[] {
     const queue = this.queues.get(queueId);
-    var retValue: string[] = undefined;
+    let retValue: string[] = undefined;
 
     if (queue && queue.length >= count) {
       if (count == 1) {
@@ -52,12 +52,12 @@ export class PlayerQueue<T extends number | string> {
     const dHandler = () => {
       const queue = this.queues.get(queueId);
       if (queue) {
-        const i = queue.findIndex(e => e === player.id);
+        const i = queue.findIndex((e) => e === player.id);
         if (i >= 0) {
           queue.splice(i, 1);
         }
       }
-    }
+    };
 
     this.disconnectHandlers.set(player.id, () => {
       player.onDisconnect(dHandler, true);

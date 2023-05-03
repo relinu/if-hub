@@ -18,12 +18,7 @@ import { TcpServer } from './tcp-server';
     AuthHandler,
     GameModeSelectHandler,
   ],
-  exports: [
-    TcpServer,
-    ClientCollection,
-    HandlerRegistry,
-    GameModeRegistry,
-  ],
+  exports: [TcpServer, ClientCollection, HandlerRegistry, GameModeRegistry],
   imports: [AuthModule],
 })
 export class NetworkingModule {}

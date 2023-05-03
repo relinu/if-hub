@@ -30,16 +30,26 @@ export class Trade {
 
     const packetParam = JSON.stringify(pokemon);
     for (const player of this.players) {
-      player.sendPacket(new Packet(TradePacketType.TRADEPKM, [(clientId === player.id).toString(), packetParam]));
+      player.sendPacket(
+        new Packet(TradePacketType.TRADEPKM, [
+          (clientId === player.id).toString(),
+          packetParam,
+        ]),
+      );
     }
   }
 
   public setPlayerAccepts(clientId: string, accept: boolean) {
     this.acceptance.set(clientId, accept);
 
-    var allAccepted = true;
+    let allAccepted = true;
     for (const player of this.players) {
-      player.sendPacket(new Packet(TradePacketType.TRADEACPT, [(clientId === player.id).toString(), accept.toString()]));
+      player.sendPacket(
+        new Packet(TradePacketType.TRADEACPT, [
+          (clientId === player.id).toString(),
+          accept.toString(),
+        ]),
+      );
       allAccepted = allAccepted && this.acceptance.get(player.id);
     }
 
@@ -51,8 +61,12 @@ export class Trade {
       const poke2 = this.pokemon.get(player2.id);
 
       if (poke1 && poke2) {
-        player1.sendPacket(new Packet(TradePacketType.TRADEFIN, [JSON.stringify(poke2)]));
-        player2.sendPacket(new Packet(TradePacketType.TRADEFIN, [JSON.stringify(poke1)]));
+        player1.sendPacket(
+          new Packet(TradePacketType.TRADEFIN, [JSON.stringify(poke2)]),
+        );
+        player2.sendPacket(
+          new Packet(TradePacketType.TRADEFIN, [JSON.stringify(poke1)]),
+        );
       }
 
       this.stop();

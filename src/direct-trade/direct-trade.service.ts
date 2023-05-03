@@ -83,7 +83,11 @@ export class DirectTradeService extends GameModeSelector {
       this.handlerRegistry.addHandler(players[i], 'TradeAcceptHandler');
 
       const otherPlayer = (i + 1) % 2;
-      players[i].sendPacket(new Packet(TradePacketType.TRADESTR, [players[otherPlayer].getData(DATA_KEY_NAME)]));
+      players[i].sendPacket(
+        new Packet(TradePacketType.TRADESTR, [
+          players[otherPlayer].getData(DATA_KEY_NAME),
+        ]),
+      );
     }
   }
 }

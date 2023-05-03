@@ -16,7 +16,6 @@ export class TradePokemonHandler extends BaseHandler {
     super();
   }
 
-
   public get type(): string {
     return TradePacketType.TRADEPKM;
   }
@@ -34,7 +33,10 @@ export class TradePokemonHandler extends BaseHandler {
     const trade = this.dtService.getTrade(tradeId);
 
     console.log(packet);
-    const pokemon: Pokemon = packet.getParameter(0, ParamTypes.object) as Pokemon;
+    const pokemon: Pokemon = packet.getParameter(
+      0,
+      ParamTypes.object,
+    ) as Pokemon;
     if (pokemon) {
       this.logger.debug(
         `Client(${client.id}) want to trade: ${pokemon.personal_id}`,

@@ -16,7 +16,6 @@ export class TradeAcceptHandler extends BaseHandler {
     super();
   }
 
-
   public get type(): string {
     return TradePacketType.TRADEACPT;
   }

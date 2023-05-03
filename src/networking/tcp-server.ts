@@ -14,7 +14,8 @@ const NET_SOCKET_TIMEOUT_DEFAULT = 60 * 1000;
 
 @Injectable()
 export class TcpServer
-  implements OnApplicationBootstrap, BeforeApplicationShutdown {
+  implements OnApplicationBootstrap, BeforeApplicationShutdown
+{
   private readonly logger = new Logger(TcpServer.name);
   private server: TCPServer;
 
@@ -45,10 +46,12 @@ export class TcpServer
   private clientConnected(socket: Socket) {
     socket.setTimeout(NET_SOCKET_TIMEOUT_DEFAULT);
     const client = this.clientCollection.addClient(socket);
-    var buffer: string = "";
+    const buffer = '';
 
     // on data
-    socket.on('data', (data) => this.handleConnectionData(client, data, buffer));
+    socket.on('data', (data) =>
+      this.handleConnectionData(client, data, buffer),
+    );
 
     // disconnect client
     socket.on('end', () => client.disconnect());
@@ -62,7 +65,7 @@ export class TcpServer
     const msgs = buffer.split('\n');
     const lastIndex = msgs.length - 1;
 
-    for (var i = 0; i < lastIndex; i++) {
+    for (let i = 0; i < lastIndex; i++) {
       const packet = Packet.toPacket(msgs[i].trim());
       this.logger.debug(`Client(${client.id}) sent packet: ${packet.type}`);
       if (packet) {

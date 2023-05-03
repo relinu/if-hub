@@ -38,7 +38,10 @@ export class AuthHandler extends BaseHandler {
       client.setData(DATA_KEY_AUTH, true);
       client.setData(DATA_KEY_NAME, info);
       this.handlerRegistry.removeHandler(client, AuthHandler);
-      const mode = this.handlerRegistry.addHandler(client, GameModeSelectHandler);
+      const mode = this.handlerRegistry.addHandler(
+        client,
+        GameModeSelectHandler,
+      );
       client.sendPacket(new Packet(mode.type));
     } else {
       client.disconnect();
