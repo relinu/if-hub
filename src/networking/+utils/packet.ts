@@ -45,7 +45,7 @@ export class Packet {
   public toString() {
     let msg = this.type;
     if (this.parameters.length > 0) {
-      msg += ':' + this.parameters.join(':');
+      msg += ';' + this.parameters.join(';');
     }
 
     return msg + '\n';
@@ -55,9 +55,8 @@ export class Packet {
     return this.parameters?.length;
   }
 
-  public static toPacket(data: Buffer): Packet {
-    const message = data.toString().trim();
-    const parameters = message.split(':');
+  public static toPacket(data: string): Packet {
+    const parameters = data.split(';');
     const type = parameters.shift();
     return new Packet(type, parameters);
   }
