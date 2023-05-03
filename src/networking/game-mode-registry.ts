@@ -1,10 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { GameMode } from 'src/+utils/game-mode';
-import { Client } from './+utils/client';
-
-export abstract class GameModeSelector {
-  abstract initialize(client: Client): void;
-}
+import { GameModeSelector } from './+utils/game-mode-selector';
 
 @Injectable()
 export class GameModeRegistry {

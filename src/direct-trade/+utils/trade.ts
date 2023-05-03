@@ -2,13 +2,9 @@ import { Pokemon } from 'src/+models/pokemon.schema';
 import { Client } from 'src/networking/+utils/client';
 import { Packet } from 'src/networking/+utils/packet';
 import { v4 as uuidV4 } from 'uuid';
-import { TradeAcceptHandler } from '../+handlers/trade-accept.handler';
-import { TradePokemonHandler } from '../+handlers/trade-pokemon.handler';
 import { DirectTradeService } from '../direct-trade.service';
+import { TradePacketType } from './trade-packet';
 
-export const PACKET_TRADE_START = 'TRADESTR';
-export const PACKET_TRADE_FIN = 'TRADEFIN';
-export const PACKET_TRADE_STOP = 'TRADESTP';
 export const DATA_KEY_TRADE = 'trade_key';
 
 export class Trade {
@@ -34,7 +30,7 @@ export class Trade {
 
     const packetParam = JSON.stringify(pokemon);
     for (const player of this.players) {
-      player.sendPacket(new Packet(TradePokemonHandler.type, [(clientId === player.id).toString(), packetParam]));
+      player.sendPacket(new Packet(TradePacketType.TRADEPKM, [(clientId === player.id).toString(), packetParam]));
     }
   }
 
@@ -43,7 +39,7 @@ export class Trade {
 
     var allAccepted = true;
     for (const player of this.players) {
-      player.sendPacket(new Packet(TradeAcceptHandler.type, [(clientId === player.id).toString(), accept.toString()]));
+      player.sendPacket(new Packet(TradePacketType.TRADEACPT, [(clientId === player.id).toString(), accept.toString()]));
       allAccepted = allAccepted && this.acceptance.get(player.id);
     }
 
@@ -55,8 +51,8 @@ export class Trade {
       const poke2 = this.pokemon.get(player2.id);
 
       if (poke1 && poke2) {
-        player1.sendPacket(new Packet(PACKET_TRADE_FIN, [JSON.stringify(poke2)]));
-        player2.sendPacket(new Packet(PACKET_TRADE_FIN, [JSON.stringify(poke1)]));
+        player1.sendPacket(new Packet(TradePacketType.TRADEFIN, [JSON.stringify(poke2)]));
+        player2.sendPacket(new Packet(TradePacketType.TRADEFIN, [JSON.stringify(poke1)]));
       }
 
       this.stop();

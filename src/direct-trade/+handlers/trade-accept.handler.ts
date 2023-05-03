@@ -1,9 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { DirectTradeService } from 'src/direct-trade/direct-trade.service';
+import { DirectTradeService } from '../direct-trade.service';
 import { BaseHandler } from 'src/networking/+handlers/base.handler';
 import { Client } from 'src/networking/+utils/client';
 import { Packet, ParamTypes } from 'src/networking/+utils/packet';
 import { DATA_KEY_TRADE } from '../+utils/trade';
+import { TradePacketType } from '../+utils/trade-packet';
 
 export const DATA_KEY_TRADE_ACCEPT = 'trade_accept_key';
 
@@ -15,8 +16,9 @@ export class TradeAcceptHandler extends BaseHandler {
     super();
   }
 
+
   public get type(): string {
-    return TradeAcceptHandler.type;
+    return TradePacketType.TRADEACPT;
   }
 
   public check(client: Client, packet: Packet): boolean {
@@ -34,9 +36,5 @@ export class TradeAcceptHandler extends BaseHandler {
     trade.setPlayerAccepts(client.id, accept);
 
     return true;
-  }
-
-  public static get type(): string {
-    return 'TRADEACPT';
   }
 }

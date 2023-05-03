@@ -2,19 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { GameMode } from 'src/+utils/game-mode';
 import { PlayerQueue, PACKET_QUEUE } from 'src/+utils/player-queue';
 import { Client, DATA_KEY_NAME } from 'src/networking/+utils/client';
+import { GameModeSelector } from 'src/networking/+utils/game-mode-selector';
 import { Packet } from 'src/networking/+utils/packet';
 import { ClientCollection } from 'src/networking/client-collection';
-import { GameModeRegistry, GameModeSelector } from 'src/networking/game-mode-registry';
+import { GameModeRegistry } from 'src/networking/game-mode-registry';
 import { HandlerRegistry } from 'src/networking/handler-registry';
 import { DTRoomHandler } from './+handlers/dtroom.handler';
-import { TradeAcceptHandler } from './+handlers/trade-accept.handler';
-import { TradePokemonHandler } from './+handlers/trade-pokemon.handler';
-import {
-  Trade,
-  DATA_KEY_TRADE,
-  PACKET_TRADE_START,
-  PACKET_TRADE_STOP,
-} from './+utils/trade';
+import { Trade, DATA_KEY_TRADE } from './+utils/trade';
+import { TradePacketType } from './+utils/trade-packet';
 
 @Injectable()
 export class DirectTradeService extends GameModeSelector {
@@ -41,12 +36,16 @@ export class DirectTradeService extends GameModeSelector {
   public startTrade(client: Client, code: number) {
     const partner = this.playerQueue.find(code);
 
-    if (partner) {
-      this.playerQueue.enqueue(code, client.id);
+    if (!partner) {
+      this.playerQueue.enqueue(code, client);
       client.sendPacket(new Packet(PACKET_QUEUE));
     } else {
       const partnerClient = this.clientCollection.getClient(partner[0]);
-      this.createTrade([client, partnerClient]);
+      if (partnerClient) {
+        this.createTrade([client, partnerClient]);
+      } else {
+        this.startTrade(client, code);
+      }
     }
   }
 
@@ -57,13 +56,17 @@ export class DirectTradeService extends GameModeSelector {
   public endTrade(tradeId: string) {
     const trade = this.getTrade(tradeId);
 
+    if (!trade) {
+      return;
+    }
+
     for (const player of trade.players) {
       player.setData(DATA_KEY_TRADE, undefined);
 
-      this.handlerRegistry.removeHandler(player, TradePokemonHandler);
-      this.handlerRegistry.removeHandler(player, TradeAcceptHandler);
+      this.handlerRegistry.removeHandler(player, 'TradePokemonHandler');
+      this.handlerRegistry.removeHandler(player, 'TradeAcceptHandler');
 
-      player.sendPacket(new Packet(PACKET_TRADE_STOP));
+      player.sendPacket(new Packet(TradePacketType.TRADESTP));
     }
 
     this.trades.delete(tradeId);
@@ -76,11 +79,11 @@ export class DirectTradeService extends GameModeSelector {
     for (let i = 0; i < players.length; i++) {
       players[i].setData(DATA_KEY_TRADE, trade.id);
 
-      this.handlerRegistry.addHandler(players[i], TradePokemonHandler);
-      this.handlerRegistry.addHandler(players[i], TradeAcceptHandler);
+      this.handlerRegistry.addHandler(players[i], 'TradePokemonHandler');
+      this.handlerRegistry.addHandler(players[i], 'TradeAcceptHandler');
 
       const otherPlayer = (i + 1) % 2;
-      players[i].sendPacket(new Packet(PACKET_TRADE_START, [players[otherPlayer].getData(DATA_KEY_NAME)]));
+      players[i].sendPacket(new Packet(TradePacketType.TRADESTR, [players[otherPlayer].getData(DATA_KEY_NAME)]));
     }
   }
 }

@@ -1,11 +1,12 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Pokemon } from 'src/+models/pokemon.schema';
+import { DirectTradeService } from '../direct-trade.service';
 import { BaseHandler } from 'src/networking/+handlers/base.handler';
 import { Client } from 'src/networking/+utils/client';
 import { Packet, ParamTypes } from 'src/networking/+utils/packet';
 import { DATA_KEY_TRADE } from '../+utils/trade';
-import { DirectTradeService } from '../direct-trade.service';
 import { DATA_KEY_TRADE_ACCEPT } from './trade-accept.handler';
+import { TradePacketType } from '../+utils/trade-packet';
 
 @Injectable()
 export class TradePokemonHandler extends BaseHandler {
@@ -15,8 +16,9 @@ export class TradePokemonHandler extends BaseHandler {
     super();
   }
 
+
   public get type(): string {
-    return TradePokemonHandler.type;
+    return TradePacketType.TRADEPKM;
   }
 
   public check(client: Client, packet: Packet): boolean {
@@ -31,10 +33,8 @@ export class TradePokemonHandler extends BaseHandler {
     const tradeId = client.getData<string>(DATA_KEY_TRADE);
     const trade = this.dtService.getTrade(tradeId);
 
-    const pokemon: Pokemon = packet.getParameter(
-      0,
-      ParamTypes.object,
-    ) as Pokemon;
+    console.log(packet);
+    const pokemon: Pokemon = packet.getParameter(0, ParamTypes.object) as Pokemon;
     if (pokemon) {
       this.logger.debug(
         `Client(${client.id}) want to trade: ${pokemon.personal_id}`,
@@ -44,9 +44,5 @@ export class TradePokemonHandler extends BaseHandler {
     }
 
     return false;
-  }
-
-  public static get type(): string {
-    return 'TRADEPKM';
   }
 }
