@@ -7,14 +7,14 @@ import { Client } from './+utils/client';
 export class HandlerRegistry {
   constructor(private moduleRef: ModuleRef) {}
 
-  public addHandler<T extends BaseHandler>(client: Client, type: Type<T>): T {
-    const handler = this.moduleRef.get(type);
+  public addHandler<T extends BaseHandler>(client: Client, type: Type<T> | string): T {
+    const handler = this.moduleRef.get(type, { strict: false });
     client.addHandler(handler);
     return handler;
   }
 
-  public removeHandler<T extends BaseHandler>(client: Client, type: Type<T>) {
-    const handler = this.moduleRef.get(type);
+  public removeHandler<T extends BaseHandler>(client: Client, type: Type<T> | string) {
+    const handler = this.moduleRef.get(type, { strict: false });
     client.removeHandler(handler);
   }
 }

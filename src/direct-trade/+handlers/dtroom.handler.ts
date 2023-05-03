@@ -30,6 +30,8 @@ export class DTRoomHandler extends BaseHandler {
     client.setData(DATA_KEY_QUEUE, code);
     this.handlerRegistry.removeHandler(client, DTRoomHandler);
 
+    this.logger.debug(`Client(${client.id}) searching for room: ${code}`);
+
     this.dtService.startTrade(client, code);
     return true;
   }
