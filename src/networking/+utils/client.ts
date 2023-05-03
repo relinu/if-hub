@@ -6,6 +6,7 @@ import { BaseHandler } from '../+handlers/base.handler';
 import { Packet } from './packet';
 
 const NET_AUTH_TIMEOUT_DEFAULT = 2 * 1000;
+const EVENT_DISCONNECT = 'disconnect';
 export const DATA_KEY_NAME = 'name_key';
 
 export class Client {
@@ -21,6 +22,7 @@ export class Client {
   constructor(id: string, socket: Socket) {
     this.id = id;
     this.socket = socket;
+    this.event = new EventEmitter();
     this.data = new Map<string, any>();
     this.setData(DATA_KEY_AUTH, false);
 
@@ -34,14 +36,18 @@ export class Client {
   }
 
   public disconnect(msg = '') {
-    if (this.socket && !this.socket.destroyed) {
+    if (this.event) {
       this.logger.log(`Client(${this.id}) disconnected`);
-      const error = msg ? { name: 'error', message: msg } : undefined;
-      this.socket.destroy(error);
-      this.event.emit('disconnect', this.id);
+      this.event.emit(EVENT_DISCONNECT, this.id);
+      this.event.removeAllListeners();
+      this.event = undefined;
     }
 
-    this.event.removeAllListeners();
+    if (this.socket && !this.socket.destroyed) {
+      const error = msg ? { name: 'error', message: msg } : undefined;
+      this.socket.destroy(error);
+    }
+
     this.clearTimeout();
   }
 
@@ -71,8 +77,12 @@ export class Client {
     this.handlers.delete(handler.type);
   }
 
-  public onDisconnect(handler: (id: string) => void) {
-    this.event.on('disconnect', handler);
+  public onDisconnect(handler: (id: string) => void, remove: boolean = false) {
+    if (remove) {
+      this.event.removeListener(EVENT_DISCONNECT, handler);
+    } else {
+      this.event.on(EVENT_DISCONNECT, handler);
+    }
   }
 
   public clearTimeout() {
